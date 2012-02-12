@@ -6,57 +6,66 @@ class Country(models.Model):
 
     """Country"""
 
-    code2 = models.CharField(_("two letter country code"),
+    codei = models.PositiveSmallIntegerField(_("ISO 3166-1 numeric"),
+                                             primary_key=True)
+    code2 = models.SlugField(_("ISO 3166-1 alpha-2"),
                              max_length=2,
-                             primary_key=True)
-    code3 = models.CharField(_("three letter country code"),
+                             unique=True)
+    code3 = models.SlugField(_("ISO 3166-1 alpha-3"),
                              max_length=3,
                              unique=True)
     englishName = models.CharField(_("Country name in English"),
                                    max_length=128)
-    localName = models.CharField(_("Country name in the local language"),
+    localName = models.CharField(_("Country name in local language"),
                                  max_length=256)
 
 
 class Area(models.Model):
 
-    """Wide area in the country."""
+    """Wide area in the country"""
 
-    name = models.CharField(_("name of the area"),
-                            max_length=128)
     country = models.ForeignKey(Country)
+    englishName = models.CharField(_("name of the area in English"),
+                                   max_length=128)
+    localName = models.CharField(_("name of the area in local language"),
+                                 max_length=128)
 
 
-class Prefecture(models.Model):
+class District(models.Model):
 
-    """Prefecture, smaller area in the country"""
+    """Smaller area in the country"""
 
-    name = models.CharField(_("name of the prefecture"),
-                            max_length=128)
     area = models.ForeignKey(Area)
+    code = models.SlugField(_("ISO 3166-2"),
+                            max_length=6)
+    englishName = models.CharField(_("name of the district in English"),
+                                   max_length=128)
+    localName = models.CharField(_("name of the district in local language"),
+                                 max_length=128)
 
 
 class CompanyType(models.Model):
 
     """The type of the railway company"""
 
-    name = models.CharField(_("type of the railway"),
-                            max_length=64)
+    description = models.CharField(_("type of the railway"),
+                                   max_length=64)
 
 
 class Company(models.Model):
 
     """Railway company"""
 
+    companyType = models.ForeignKey(CompanyType)
     name = models.CharField(_("name of the company"),
                             max_length=256)
-    companyType = models.ForeignKey(CompanyType)
 
 
 class Line(models.Model):
 
     """Railway line"""
 
+    company = models.ForeignKey(Company)
     code = models.IntegerField(_("the line code in ekidata"),
                                blank=True,
                                null=True,
@@ -66,15 +75,7 @@ class Line(models.Model):
                                null=True)
     name = models.CharField(_("name of the line"),
                             max_length=256)
-    company = models.ForeignKey(Company)
     enabled = models.BooleanField(_("Enabled"))
-
-
-class StationType(models.Model):
-
-    """Type of the station"""
-
-    isUnderground = models.BooleanField(_("Underground station"))
 
 
 class Station(models.Model):
@@ -99,8 +100,8 @@ class Station(models.Model):
                                decimal_places=1,
                                blank=True,
                                null=True)
-    prefecture = models.ForeignKey(Prefecture)
-    stType = models.ForeignKey(StationType)
+    district = models.ForeignKey(District)
+    isUnderground = models.BooleanField(_("Subway station"))
     longitude = models.DecimalField(_("longitude of the station"),
                                     max_digits=9,
                                     decimal_places=6)
