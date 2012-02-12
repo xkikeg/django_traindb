@@ -115,8 +115,8 @@ class AdjacentStation(models.Model):
 
     """Adjacence of the station"""
 
-    station1 = models.ForeignKey(Station)
-    station2 = models.ForeignKey(Station)
+    station1 = models.ForeignKey(Station, related_name="set1")
+    station2 = models.ForeignKey(Station, related_name="set2")
     kilo = models.DecimalField(_("kilo between the stations"),
                                max_digits=6,
                                decimal_places=1)
