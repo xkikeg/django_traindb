@@ -1,6 +1,8 @@
 from django.db import models
 from django.utils.translation import ugettext as _
 
+MAX_KILO_DIGITS = 6
+
 
 class Country(models.Model):
 
@@ -14,13 +16,13 @@ class Country(models.Model):
     code3 = models.SlugField(_("ISO 3166-1 alpha-3"),
                              max_length=3,
                              unique=True)
-    englishName = models.CharField(_("Country name in English"),
+    englishName = models.CharField(_("country name in English"),
                                    max_length=128)
-    localName = models.CharField(_("Country name in local language"),
+    localName = models.CharField(_("country name in local language"),
                                  max_length=256)
 
 
-class Area(models.Model):
+class CountryArea(models.Model):
 
     """Wide area in the country"""
 
@@ -35,7 +37,7 @@ class District(models.Model):
 
     """Smaller area in the country"""
 
-    area = models.ForeignKey(Area)
+    countryArea = models.ForeignKey(CountryArea)
     code = models.SlugField(_("ISO 3166-2"),
                             max_length=6)
     englishName = models.CharField(_("name of the district in English"),
@@ -70,12 +72,12 @@ class Line(models.Model):
                                blank=True,
                                null=True,
                                unique=True)
-    sort = models.IntegerField(_("sort key with line in ekidata"),
+    sort = models.IntegerField(_("sort key of line in ekidata"),
                                blank=True,
                                null=True)
     name = models.CharField(_("name of the line"),
                             max_length=256)
-    enabled = models.BooleanField(_("Enabled"))
+    enabled = models.BooleanField(_("enabled"))
 
 
 class Station(models.Model):
@@ -87,28 +89,28 @@ class Station(models.Model):
                                blank=True,
                                null=True,
                                unique=True)
-    sort = models.IntegerField(_("sort key in ekidata"),
+    sort = models.IntegerField(_("sort key of station in ekidata"),
                                blank=True,
                                null=True)
-    groupCode = models.IntegerField(_("group code of the station"),
+    groupCode = models.IntegerField(_("group code of the station in ekidata"),
                                     blank=True,
                                     null=True)
     name = models.CharField(_("name of the station"),
                             max_length=256)
     kilo = models.DecimalField(_("kilo from the origination"),
-                               max_digits=6,
+                               max_digits=MAX_KILO_DIGITS,
                                decimal_places=1,
                                blank=True,
                                null=True)
     district = models.ForeignKey(District)
-    isUnderground = models.BooleanField(_("Subway station"))
+    isUnderground = models.BooleanField(_("subway station flag"))
     longitude = models.DecimalField(_("longitude of the station"),
                                     max_digits=9,
                                     decimal_places=6)
     latitude = models.DecimalField(_("latitude of the station"),
                                    max_digits=9,
                                    decimal_places=6)
-    enabled = models.BooleanField(_("Enabled"))
+    enabled = models.BooleanField(_("enabled"))
 
 
 class AdjacentStation(models.Model):
@@ -118,7 +120,7 @@ class AdjacentStation(models.Model):
     station1 = models.ForeignKey(Station, related_name="set1")
     station2 = models.ForeignKey(Station, related_name="set2")
     kilo = models.DecimalField(_("kilo between the stations"),
-                               max_digits=6,
+                               max_digits=MAX_KILO_DIGITS,
                                decimal_places=1)
     interPoints = models.CharField(_("intermediate points of the adjacence"),
                                    max_length=2048)
