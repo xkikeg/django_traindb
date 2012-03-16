@@ -12,13 +12,14 @@ class EnglishAndLocalizedNameObject(models.Model):
 
     """Abstract class for object with English and localized name."""
 
-    english_name = models.CharField(_("English name of the %(class)s"),
+    english_name = models.CharField(_("English name"),
                                     max_length=MAX_ENGLISH_NAME)
-    local_name = models.CharField(_("localized name of the %(class)s"),
+    local_name = models.CharField(_("localized name"),
                                   max_length=MAX_LOCALIZED_NAME)
 
     class Meta:
         abstract = True
+        ordering = ('local_name', 'english_name')
 
     def __unicode__(self):
         return self.local_name
@@ -37,12 +38,20 @@ class Country(EnglishAndLocalizedNameObject):
                              max_length=3,
                              unique=True)
 
+    class Meta:
+        ordering = (('code2', 'code3')
+                    + EnglishAndLocalizedNameObject.Meta.ordering)
+
 
 class DomesticRegion(EnglishAndLocalizedNameObject):
 
     """wider area in the country"""
 
     country = models.ForeignKey(Country)
+
+    class Meta:
+        ordering = (('country',)
+                    + EnglishAndLocalizedNameObject.Meta.ordering)
 
 
 class District(EnglishAndLocalizedNameObject):
@@ -52,6 +61,10 @@ class District(EnglishAndLocalizedNameObject):
     domesticregion = models.ForeignKey(DomesticRegion)
     code = models.SlugField(_("ISO 3166-2"),
                             max_length=6)
+
+    class Meta:
+        ordering = (('code',)
+                    + EnglishAndLocalizedNameObject.Meta.ordering)
 
 
 class CompanyType(models.Model):
@@ -73,6 +86,9 @@ class Company(models.Model):
     companytype = models.ForeignKey(CompanyType)
     name = models.CharField(_("name of the company"),
                             max_length=256)
+
+    class Meta:
+        ordering = ('companytype', 'id')
 
     def __unicode__(self):
         return self.name
@@ -108,11 +124,15 @@ class Line(models.Model):
     name = models.CharField(_("name of the line"),
                             max_length=MAX_LINE_NAME_LENGTH)
     nickname = models.CharField(_("nickname of the line"),
-                            max_length=MAX_LINE_NICKNAME_LENGTH)
+                                max_length=MAX_LINE_NICKNAME_LENGTH,
+                                blank=True)
     enabled = models.BooleanField(_("enabled flag"))
     defunct_date = models.DateField(_("date when get defunct if disabled"),
                                     blank=True,
                                     null=True)
+
+    class Meta:
+        ordering = ('sort', 'code', 'company', 'name')
 
     def __unicode__(self):
         return unicode(self.company) + u',' + unicode(self.name)
@@ -149,6 +169,9 @@ class Station(models.Model):
                                    max_digits=9,
                                    decimal_places=6)
     enabled = models.BooleanField(_("enabled flag"))
+
+    class Meta:
+        ordering = ('sort', 'code', 'name')
 
     def __unicode__(self):
         return unicode(self.line) + u',' + unicode(self.name)
