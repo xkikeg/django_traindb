@@ -26,6 +26,16 @@ def get_model_class(model_name_string):
                    model_name_string)
 
 
+class get_object_with_field(object):
+    def __init__(self, name, field):
+        self.name = name
+        self.field = field
+
+    def __call__(self, x):
+        name, field = self.name, self.field
+        return get_model_class(name).objects.get(**{field: x})
+
+
 class CSVConfigManager(object):
 
     """CSV loading configuration manager which can import csv data."""
@@ -88,8 +98,7 @@ class CSVConfigManager(object):
                     ref_name, ref_field = convarg.split('.')
                     ref_model = get_model_class(ref_name)
                     # lookup convarg with x
-                    self.conv[i] = (
-                        lambda x: ref_model.objects.get(**{ref_field: x}))
+                    self.conv[i] = get_object_with_field(ref_name, ref_field)
                 elif convcommand == "eval":
                     if DEBUG: print "eval", convarg
                     self.conv[i] = eval(convarg)
@@ -117,7 +126,7 @@ class CSVConfigManager(object):
             ret[fn] = self.get_field_value(i, x.decode("UTF-8"))
         return ret
 
-    def import_csv(self, datafile, is_dry=True, **kwargs):
+    def import_csv(self, datafile, is_dry=True, is_force=False, **kwargs):
         f = csv.reader(open(datafile), **kwargs)
         header = f.next()
         self.set_header(header)
@@ -128,7 +137,7 @@ class CSVConfigManager(object):
                 make_model_kwargs = self.make_model_args(row)
             except ObjectDoesNotExist:
                 print >>sys.stderr, row
-                raise
+                if not is_force: raise
             if self.model.objects.filter(**make_model_kwargs).count() == 0:
                 if DEBUG: print "create:", make_model_kwargs
                 obj = self.model(**make_model_kwargs)
@@ -162,6 +171,8 @@ class Command(BaseCommand):
                     default='"', help="CSV quotation character."),
         make_option('-n', '--dry-run', action='store_true', dest='dry',
                     default=False, help="Only print data without importing."),
+        make_option('-f', '--force', action='store_true', dest='force',
+                    default=False, help="Force not to stop."),
         make_option('--config', action='store', dest='config',
                     default=None, help="Set config file."),
         make_option('--model', action='store', dest='model',
@@ -170,6 +181,7 @@ class Command(BaseCommand):
 
     def handle(self, *csv_labels, **option):
         is_dry = option.get('dry')
+        is_force = option.get('force')
         delimiter = option.get('delimiter')
         quotechar = option.get('quotechar')
         config = option.get('config')
@@ -177,5 +189,5 @@ class Command(BaseCommand):
         manager = CSVConfigManager(config, model)
         for i in csv_labels:
             print i
-            manager.import_csv(i, is_dry=is_dry,
+            manager.import_csv(i, is_dry=is_dry, is_force=is_force,
                                delimiter=delimiter, quotechar=quotechar)
