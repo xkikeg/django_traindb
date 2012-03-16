@@ -1,0 +1,154 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) 2012 liquid_amber
+# This file is distributed under the same license as the Einhorn package.
+# liquid_amber <liquid.amber.ja@gmail.com>, 2012.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Einhorn 0.1\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2012-03-16 20:42+0900\n"
+"PO-Revision-Date: 2012-03-16 20:42+0900\n"
+"Last-Translator: K. Ikegami <liquid@logos.ic.i.u-tokyo.ac.jp>\n"
+"Language-Team: \n"
+"Language: ja\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=1; plural=0\n"
+
+#: models.py:15
+msgid "English name"
+msgstr "英語名"
+
+#: models.py:17
+msgid "localized name"
+msgstr "現地語名"
+
+#: models.py:32
+msgid "ISO 3166-1 numeric"
+msgstr ""
+
+#: models.py:34
+msgid "ISO 3166-1 alpha-2"
+msgstr ""
+
+#: models.py:37
+msgid "ISO 3166-1 alpha-3"
+msgstr ""
+
+#: models.py:62
+msgid "ISO 3166-2"
+msgstr ""
+
+#: models.py:74
+msgid "type of the railway"
+msgstr "路線種別"
+
+#: models.py:87
+msgid "name of the company"
+msgstr "運営会社名"
+
+#: models.py:98
+msgid "high speed train"
+msgstr "高速鉄道(新幹線)"
+
+#: models.py:99
+msgid "normal train"
+msgstr "普通鉄道"
+
+#: models.py:100
+msgid "tram train"
+msgstr "路面電車"
+
+#: models.py:101
+msgid "suspended monorail"
+msgstr "懸垂式モノレール"
+
+#: models.py:102
+msgid "straddle monorail"
+msgstr "跨座式モノレール"
+
+#: models.py:103
+msgid "guideway transit"
+msgstr "案内式"
+
+#: models.py:104
+msgid "funicular"
+msgstr "ケーブルカー"
+
+#: models.py:105
+msgid "trolleybus"
+msgstr "トロリーバス"
+
+#: models.py:106
+msgid "Maglev train"
+msgstr "磁気浮上式鉄道"
+
+#: models.py:115
+msgid "the line code in ekidata"
+msgstr "ekidata路線コード"
+
+#: models.py:119
+msgid "sort key of line in ekidata"
+msgstr "ekidata路線ソートキー"
+
+#: models.py:122
+msgid "technical line type"
+msgstr "路線種別"
+
+#: models.py:124
+msgid "name of the line"
+msgstr "路線名"
+
+#: models.py:126
+msgid "nickname of the line"
+msgstr "路線愛称"
+
+#: models.py:129 models.py:171
+msgid "enabled flag"
+msgstr "有効フラグ"
+
+#: models.py:130
+msgid "date when get defunct if disabled"
+msgstr "廃止日"
+
+#: models.py:146
+msgid "station code in ekidata"
+msgstr "ekidata駅コード"
+
+#: models.py:150
+msgid "sort key of station in ekidata"
+msgstr "ekidata駅ソートキー"
+
+#: models.py:153
+msgid "group code of the station in ekidata"
+msgstr "ekidata駅グループコード"
+
+#: models.py:156
+msgid "name of the station"
+msgstr "駅名"
+
+#: models.py:158
+msgid "kilo from the origination"
+msgstr "起点からの距離"
+
+#: models.py:164
+msgid "subway station flag"
+msgstr "地下鉄駅名"
+
+#: models.py:165
+msgid "longitude of the station"
+msgstr "駅の経度"
+
+#: models.py:168
+msgid "latitude of the station"
+msgstr "駅の緯度"
+
+#: models.py:184
+msgid "kilo between the stations"
+msgstr "駅間のキロ程"
+
+#: models.py:189
+msgid "intermediate points of the adjacence"
+msgstr "駅間の中間地点"
