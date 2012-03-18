@@ -86,7 +86,7 @@ class CSVConfigManager(object):
                     if DEBUG: print "pass"
                     self.conv[i] = lambda x: x
                     continue
-                N = re.compile(r'([^(]+)(?:\((.+?)\))').match(setting[1])
+                N = re.compile(r'([^(]+)\((.+)\)').match(setting[1])
                 assert N, "option of label '%(field)s' is invalid: %(setting)s" % {
                     "field": label,
                     "setting": setting[1],
